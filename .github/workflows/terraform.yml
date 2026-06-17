@@ -58,7 +58,7 @@ jobs:
         uses: hashicorp/setup-terraform@v3
 
       - name: Terraform Init
-        run: terraform init
+        run: terraform init -backend-config="key=envs/${{ env.ENVIRONMENT }}/terraform.tfstate" 
 
       - name: Select/Create Workspace
         run: |
