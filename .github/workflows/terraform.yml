@@ -1,0 +1,82 @@
+
+name: Provision Terraform Infrastructure
+
+on:
+  push:
+    branches:
+      - main
+
+  pull_request:
+    branches:
+      - main
+
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: "Terraform Workspace"
+        required: true
+        default: "dev"
+        type: choice
+        options:
+          - dev
+          - qa
+          - prod
+
+      action:
+        description: "Terraform Action"
+        required: true
+        default: "plan"
+        type: choice
+        options:
+          - plan
+          - apply
+          - destroy
+
+permissions:
+  id-token: write
+  contents: read
+
+env:
+  ENVIRONMENT: ${{ github.event.inputs.environment || 'dev' }}
+  ACTION: ${{ github.event.inputs.action || 'plan' }}
+
+jobs:
+  terraform:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Configure AWS Credentials (OIDC)
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ vars.AWS_ROLE_ARN }}
+          aws-region: ${{ vars.AWS_REGION }}
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+
+      - name: Terraform Init
+        run: terraform init
+
+      - name: Select/Create Workspace
+        run: |
+          terraform workspace select $ENVIRONMENT || \
+          terraform workspace new $ENVIRONMENT
+
+      - name: Show Workspace
+        run: terraform workspace show
+
+      - name: Terraform Validate
+        run: terraform validate
+
+      - name: Terraform Action
+        run: |
+          if [ "$ACTION" = "destroy" ]; then
+            terraform destroy -auto-approve
+          elif [ "$ACTION" = "apply" ]; then
+            terraform apply -auto-approve
+          else
+            terraform plan
+          fi
