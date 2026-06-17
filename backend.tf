@@ -1,4 +1,5 @@
- backend "s3"{
+terraform{
+backend "s3"{
     bucket="zen-pharma-terraform-state-hemanthrajgandham"
     key="envs/${terraform.workspace}/terraform.tfstate"
     encrypt=true
@@ -6,3 +7,4 @@
     region="us-east-1"
   
   }
+}
