@@ -152,3 +152,15 @@ resource "aws_route_table_association" "private_rds"{
     
     route_table_id=aws_route_table.private_rds.id
 }
+
+resource "aws_db_subnet_group" "rds_subnet_group" {
+  name       = "${var.prefix}-rds-subnet-group"
+  subnet_ids = aws_subnet.privaterds[*].id
+
+tags=merge(
+        var.tags,
+        {
+            Name="${var.prefix}-rds-subnet-group"
+        }
+    )
+}

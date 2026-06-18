@@ -1,6 +1,6 @@
 locals{
     defaulttags={
-        project = "myproject" 
+        project = "pharma" 
         environment=terraform.workspace
         }
         
@@ -27,4 +27,19 @@ module "eks"{
     max_size=3
     node_instance_type=["t3.small"]
     tags=local.defaulttags
+}
+
+module "rds"{
+    source="./modules/rds"
+    prefix="${local.defaulttags.project}-${local.defaulttags.environment}"
+      # Use all RDS subnet IDs for the DB subnet group
+    tags=local.defaulttags
+    vpc_id=module.vpc.vpcid
+    allowed_cidr_blocks=module.vpc.eks_subnet_cidrs # Allow access from EKS subnets
+    db_username="pharmadb"
+    db_password=module.rds.master_password_arn 
+    rds_subnet_group_name=module.vpc.rds_subnetgroup_name  # Use the first RDS subnet name for the DB subnet group
+    instance_class="db.t3.micro"
+
+     
 }
