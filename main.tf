@@ -72,7 +72,7 @@ module "rds"{
 
 module "ecr"{
     source="./modules/ecr"
-    ecrrepositoryname={for repo in local.repositories repo.name => ecrrepositoryname}
+    ecrrepositoryname={for repo in local.repositories : repo.name => ecrrepositoryname}
     tags=local.defaulttags
     prefix = "${local.defaulttags.project}-${local.defaulttags.environment}"
 
