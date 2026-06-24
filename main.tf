@@ -26,11 +26,14 @@ locals{
 
     }
 
+
     }   
     
 environment = local.environments[terraform.workspace]    
+repositories=["api-gateway","auth-service","drug-catalog-service","inventory-service","supplier-service","manufacturing-service","notification-service","pharma-ui"]
+
 }
-module "vpc"{
+module "vpc"{ 
     source="./modules/vpc"
     vpccidr=local.environment.vpccidr
     publicsubnetcidr=local.environment.publicsubnetcidr
@@ -65,4 +68,12 @@ module "rds"{
     instance_class=var.instanceclass
 
      
+}
+
+module "ecr"{
+    source="./modules/ecr"
+    ecrrepositoryname={for repo in local.repositories repo.name => ecrrepositoryname}
+    tags=local.defaulttags
+    prefix = "${local.defaulttags.project}-${local.defaulttags.environment}"
+
 }
