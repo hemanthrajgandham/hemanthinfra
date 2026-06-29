@@ -2,11 +2,11 @@ variable "minsize"{
     default=1
 }
 variable "desiredsize"{
-    default=2
+    default=3
 }
 
 variable "maxsize"{
-    default=3
+    default=4
 }
 
 variable "nodeinstance"{
