@@ -147,6 +147,6 @@ resource "aws_eks_node_group" "example" {
 }
 
 data "aws_eks_cluster" "cluster" {
-  name = "${var.prefix}-eks-cluster-role"
+  name = aws_eks_cluster.cluster.name
 }
 
