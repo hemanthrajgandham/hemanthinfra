@@ -145,3 +145,8 @@ resource "aws_eks_node_group" "example" {
     }
   )
 }
+
+data "aws_eks_cluster" "example" {
+  name = "${var.prefix}-eks-cluster-role"
+}
+
