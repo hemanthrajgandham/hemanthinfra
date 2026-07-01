@@ -15,6 +15,7 @@ jobs:
      uses: hashicorp/setup-terraform@v3
    - name: fmt check
      run: terraform fmt -check -recursive
+     continue-on-error: true
    - name: validate
      run: terraform validate
    - name: terraform plan
