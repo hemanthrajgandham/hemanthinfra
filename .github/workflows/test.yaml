@@ -2,9 +2,7 @@ name: terraform hemanth
 on:
  push:
   branches: 
-   - "main"
-  paths:
-   - "env/dev/main.tf"
+   - main
 permissions:
  contents: read
 jobs:
