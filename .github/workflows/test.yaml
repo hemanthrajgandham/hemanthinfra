@@ -1,0 +1,36 @@
+name: terraform hemanth
+on:
+ push:
+  branches: ["main"]
+   paths: "env/dev/main.tf"
+permissons:
+ contents: read
+jobs:
+  plan:
+   runs-on: ububut:22.03
+   steps:
+   - name: checkout
+     uses: actions/checkout@v4
+   - name: set up terraform
+     uses: hashicorp/setup-terraform@v3
+   - name: fmt check
+     run: terraform fmt
+   - name: validate
+     run: terraform validate
+   - name: terraform plan
+     run: terraform plan -out=tf.plan
+   - name: upload plan
+     uses: actions/upload-artifact@v4
+     with:
+       path: tf.plan
+  build:
+   needs: plan
+   steps:
+   - name: download
+     uses: actions/download-artifact@v4
+     with:
+      path: tf.plan
+   - name: apply
+     runs: terraform apply  tf.plan
+       
+     
