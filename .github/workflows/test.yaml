@@ -16,6 +16,8 @@ jobs:
    - name: fmt check
      run: terraform fmt -check -recursive
      continue-on-error: true
+   - name: init
+     run: terraform init
    - name: validate
      run: terraform validate
    - name: terraform plan
