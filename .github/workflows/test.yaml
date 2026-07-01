@@ -1,9 +1,11 @@
 name: terraform hemanth
 on:
  push:
-  branches: ["main"]
-   paths: "env/dev/main.tf"
-permissons:
+  branches: 
+   - "main"
+  paths:
+  - "env/dev/main.tf"
+permissions:
  contents: read
 jobs:
   plan:
@@ -23,14 +25,7 @@ jobs:
      uses: actions/upload-artifact@v4
      with:
        path: tf.plan
-  build:
-   needs: plan
-   steps:
-   - name: download
-     uses: actions/download-artifact@v4
-     with:
-      path: tf.plan
    - name: apply
-     runs: terraform apply  tf.plan
+     run: terraform apply tf.plan
        
      
